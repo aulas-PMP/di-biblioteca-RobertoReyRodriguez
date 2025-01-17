@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.media.MediaView?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="ReproductorController">
+    <!-- Barra superior -->
+    <top>
+        <MenuBar styleClass="menu-bar">
+            <menus>
+                <Menu text="Archivo">
+                    <items>
+                        <MenuItem text="Abrir Directorio" onAction="#abrirDirectorio"/>
+                    </items>
+                </Menu>
+                <Menu text="Acerca de">
+                    <items>
+                        <MenuItem text="Acerca de..." onAction="#mostrarAcercaDe"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+
+    <!-- Panel izquierdo -->
+    <left>
+        <ToolBar styleClass="tool-bar">
+            <Button text="Cambiar Tamaño" onAction="#cambiarTamanoMediaView" />
+            <Button text="Cambiar Velocidad" onAction="#cambiarVelocidadReproduccion" />
+        </ToolBar>
+    </left>
+
+    <!-- Panel derecho -->
+    <right>
+        <VBox styleClass="library-panel">
+            <Label text="Biblioteca Multimedia" styleClass="library-title"/>
+            <ListView fx:id="listaArchivos" styleClass="library-list"/>
+        </VBox>
+    </right>
+
+    <!-- Centro: reproductor multimedia -->
+    <center>
+        <MediaView fx:id="mediaView" styleClass="media-view"/>
+    </center>
+
+    <!-- Panel inferior: controles de reproducción -->
+    <bottom>
+        <ToolBar styleClass="control-bar">
+            <Button text="Play" onAction="#playMedia"/>
+            <Button text="Pause" onAction="#pauseMedia"/>
+            <Button text="Stop" onAction="#stopMedia"/>
+            <Button text="Abrir Archivo" onAction="#abrirArchivo"/>
+        </ToolBar>
+    </bottom>
+</BorderPane>

@@ -1,0 +1,48 @@
+/* Estilo general */
+.root {
+    -fx-background-color: #121212;
+}
+
+/* Barra de menú */
+.menu-bar {
+    -fx-background-color: #1F1F1F;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+}
+
+/* ToolBar */
+.tool-bar, .control-bar {
+    -fx-background-color: #1F1F1F;
+    -fx-spacing: 10;
+    -fx-padding: 10;
+}
+
+/* Botones */
+.button {
+    -fx-background-color: #3E3E3E;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 12px;
+}
+
+/* Biblioteca */
+.library-panel {
+    -fx-background-color: #1F1F1F;
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+
+.library-title {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.library-list {
+    -fx-background-color: #2B2B2B;
+    -fx-text-fill: #FFFFFF;
+}
+
+/* MediaView */
+.media-view {
+    -fx-background-color: #000000;
+}
