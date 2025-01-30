@@ -25,8 +25,7 @@ public class ReproductorController {
     private void abrirArchivo() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Archivos Multimedia", "*.mp4", "*.mp3", "*.wav")
-        );
+                new FileChooser.ExtensionFilter("Archivos Multimedia", "*.mp4", "*.mp3", "*.wav"));
         File archivo = fileChooser.showOpenDialog(mediaView.getScene().getWindow());
 
         if (archivo != null) {
@@ -44,14 +43,16 @@ public class ReproductorController {
             listaArchivos.getItems().clear();
 
             for (File archivo : directorio.listFiles()) {
-                if (archivo.isFile() && (archivo.getName().endsWith(".mp4") || archivo.getName().endsWith(".mp3") || archivo.getName().endsWith(".wav"))) {
+                if (archivo.isFile() && (archivo.getName().endsWith(".mp4") || archivo.getName().endsWith(".mp3")
+                        || archivo.getName().endsWith(".wav"))) {
                     archivosEnBiblioteca.add(archivo);
                     listaArchivos.getItems().add(archivo.getName());
                 }
             }
 
             if (archivosEnBiblioteca.isEmpty()) {
-                listaArchivos.setPlaceholder(new javafx.scene.control.Label("No hay archivos multimedia en este directorio"));
+                listaArchivos.setPlaceholder(
+                        new javafx.scene.control.Label("No hay archivos multimedia en este directorio"));
             }
         }
     }
@@ -98,7 +99,8 @@ public class ReproductorController {
         Alert alerta = new Alert(Alert.AlertType.INFORMATION);
         alerta.setTitle("Acerca de Reproductor Multimedia");
         alerta.setHeaderText("Información del Reproductor Multimedia");
-        alerta.setContentText("Reproductor Multimedia v1.0\nDesarrollado por [Tu Nombre]\n\u00A9 2025");
+        alerta.setContentText(
+                "Reproductor Multimedia v1.0 Desarrollado por Rober Rey, si falla, puedes arreglarlo tu, que yo no sé");
         alerta.showAndWait();
     }
 
