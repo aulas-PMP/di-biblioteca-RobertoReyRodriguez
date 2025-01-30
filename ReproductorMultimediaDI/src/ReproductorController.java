@@ -1,11 +1,21 @@
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Slider;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.media.AudioSpectrumListener;
 import javafx.stage.FileChooser;
 import javafx.stage.DirectoryChooser;
+import javafx.util.Duration;
+import javafx.scene.control.Alert;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +23,48 @@ import java.util.List;
 public class ReproductorController {
 
     @FXML
-    private MediaView mediaView;
+    private VBox bibliotecaPanel;
+
+    @FXML
+    private Button btnToggleBiblioteca;
 
     @FXML
     private ListView<String> listaArchivos;
 
+    @FXML
+    private StackPane mediaContainer;
+
+    @FXML
+    private MediaView mediaView;
+
+    @FXML
+    private ImageView audioPlaceholder;
+
+    @FXML
+    private Slider progressBar;
+
+    @FXML
+    private Canvas audioVisualizer;
+
     private MediaPlayer mediaPlayer;
     private List<File> archivosEnBiblioteca = new ArrayList<>();
+    private boolean bibliotecaVisible = true;
+
+    @FXML
+    private void toggleBiblioteca() {
+        TranslateTransition transition = new TranslateTransition(Duration.millis(300), bibliotecaPanel);
+
+        if (bibliotecaVisible) {
+            transition.setToX(-bibliotecaPanel.getWidth());  // Oculta la biblioteca
+            btnToggleBiblioteca.setText("⏩");  // Cambia el ícono del botón
+        } else {
+            transition.setToX(0);  // Muestra la biblioteca
+            btnToggleBiblioteca.setText("⏪");
+        }
+
+        transition.play();
+        bibliotecaVisible = !bibliotecaVisible;
+    }
 
     @FXML
     private void abrirArchivo() {
@@ -58,11 +103,12 @@ public class ReproductorController {
     }
 
     @FXML
-    private void cambiarTamanoMediaView() {
-        if (mediaView != null) {
-            mediaView.setFitWidth(800);
-            mediaView.setFitHeight(600);
-        }
+    private void mostrarAcercaDe() {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Acerca de Reproductor Multimedia");
+        alerta.setHeaderText("Información del Reproductor Multimedia");
+        alerta.setContentText("Reproductor Multimedia v1.0 Desarrollado por Rober Rey.");
+        alerta.showAndWait();
     }
 
     @FXML
@@ -74,34 +120,35 @@ public class ReproductorController {
     }
 
     @FXML
-    private void playMedia() {
-        if (mediaPlayer != null) {
-            mediaPlayer.play();
-        }
+    private void setupAudioVisualizer(MediaPlayer player) {
+        audioVisualizer.setVisible(true);
+        GraphicsContext gc = audioVisualizer.getGraphicsContext2D();
+        player.setAudioSpectrumListener((timestamp, duration, magnitudes, phases) -> {
+            gc.clearRect(0, 0, audioVisualizer.getWidth(), audioVisualizer.getHeight());
+            for (int i = 0; i < magnitudes.length; i++) {
+                double x = i * (audioVisualizer.getWidth() / magnitudes.length);
+                double height = ((60 + magnitudes[i]) * 2);
+                gc.fillRect(x, audioVisualizer.getHeight() - height, 5, height);
+            }
+        });
     }
 
     @FXML
-    private void pauseMedia() {
+    private void actualizarBarraProgreso() {
         if (mediaPlayer != null) {
-            mediaPlayer.pause();
-        }
-    }
+            mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+                if (mediaPlayer.getTotalDuration() != null && !mediaPlayer.getTotalDuration().isIndefinite()) {
+                    double progreso = newTime.toSeconds() / mediaPlayer.getTotalDuration().toSeconds() * 100;
+                    progressBar.setValue(progreso);
+                }
+            });
 
-    @FXML
-    private void stopMedia() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
+            progressBar.setOnMouseReleased(event -> {
+                if (mediaPlayer != null && mediaPlayer.getTotalDuration() != null) {
+                    mediaPlayer.seek(Duration.seconds(progressBar.getValue() * mediaPlayer.getTotalDuration().toSeconds() / 100));
+                }
+            });
         }
-    }
-
-    @FXML
-    private void mostrarAcercaDe() {
-        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-        alerta.setTitle("Acerca de Reproductor Multimedia");
-        alerta.setHeaderText("Información del Reproductor Multimedia");
-        alerta.setContentText(
-                "Reproductor Multimedia v1.0 Desarrollado por Rober Rey, si falla, puedes arreglarlo tu, que yo no sé");
-        alerta.showAndWait();
     }
 
     private void reproducirArchivo(File archivo) {
@@ -113,15 +160,18 @@ public class ReproductorController {
         Media media = new Media(archivo.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaView.setMediaPlayer(mediaPlayer);
+        mediaPlayer.setOnReady(() -> actualizarBarraProgreso());
         mediaPlayer.play();
-    }
 
-    @FXML
-    private void reproducirArchivoSeleccionado() {
-        int indice = listaArchivos.getSelectionModel().getSelectedIndex();
-        if (indice >= 0) {
-            File archivoSeleccionado = archivosEnBiblioteca.get(indice);
-            reproducirArchivo(archivoSeleccionado);
+        if (archivo.getName().endsWith(".mp3") || archivo.getName().endsWith(".wav")) {
+            mediaView.setVisible(false);
+            audioPlaceholder.setVisible(false);
+            audioVisualizer.setVisible(true);
+            setupAudioVisualizer(mediaPlayer);
+        } else {
+            mediaView.setVisible(true);
+            audioPlaceholder.setVisible(false);
+            audioVisualizer.setVisible(false);
         }
     }
 }

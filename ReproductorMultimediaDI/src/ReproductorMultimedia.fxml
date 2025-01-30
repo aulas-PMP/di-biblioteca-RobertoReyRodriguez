@@ -3,14 +3,26 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.media.MediaView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.canvas.Canvas?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="ReproductorController">
-    <!-- Barra superior -->
+    
+    <!-- Barra lateral izquierda (Biblioteca) -->
+    <left>
+        <VBox fx:id="bibliotecaPanel">
+            <Button fx:id="btnToggleBiblioteca" text="⏪" onAction="#toggleBiblioteca" />
+            <ListView fx:id="listaArchivos" />
+        </VBox>
+    </left>
+
+    <!-- Panel superior (Menú) -->
     <top>
-        <MenuBar styleClass="menu-bar">
+        <MenuBar>
             <menus>
                 <Menu text="Archivo">
                     <items>
+                        <MenuItem text="Abrir Archivo" onAction="#abrirArchivo"/>
                         <MenuItem text="Abrir Directorio" onAction="#abrirDirectorio"/>
                     </items>
                 </Menu>
@@ -23,34 +35,25 @@
         </MenuBar>
     </top>
 
-    <!-- Panel izquierdo -->
-    <left>
-        <ToolBar styleClass="tool-bar">
-            <Button text="Cambiar Tamaño" onAction="#cambiarTamanoMediaView" />
-            <Button text="Cambiar Velocidad" onAction="#cambiarVelocidadReproduccion" />
-        </ToolBar>
-    </left>
-
-    <!-- Panel derecho -->
-    <right>
-        <VBox styleClass="library-panel">
-            <Label text="Biblioteca Multimedia" styleClass="library-title"/>
-            <ListView fx:id="listaArchivos" styleClass="library-list"/>
-        </VBox>
-    </right>
-
-    <!-- Centro: reproductor multimedia -->
+    <!-- Panel central con el reproductor -->
     <center>
-        <MediaView fx:id="mediaView" styleClass="media-view"/>
+        <StackPane fx:id="mediaContainer">
+            <MediaView fx:id="mediaView" style="-fx-fit-height: 100%; -fx-fit-width: 100%;"/>
+            <ImageView fx:id="audioPlaceholder" fitWidth="400" fitHeight="300" visible="false"/>
+            <Canvas fx:id="audioVisualizer" width="400" height="300" visible="false"/>
+        </StackPane>
     </center>
 
-    <!-- Panel inferior: controles de reproducción -->
+    <!-- Controles inferiores -->
     <bottom>
-        <ToolBar styleClass="control-bar">
-            <Button text="Play" onAction="#playMedia"/>
-            <Button text="Pause" onAction="#pauseMedia"/>
-            <Button text="Stop" onAction="#stopMedia"/>
-            <Button text="Abrir Archivo" onAction="#abrirArchivo"/>
-        </ToolBar>
+        <VBox spacing="10">
+            <Slider fx:id="progressBar" min="0" max="100" value="0"/>
+            <HBox alignment="CENTER" spacing="10">
+                <Button text="▶" onAction="#playMedia"/>
+                <Button text="⏸" onAction="#pauseMedia"/>
+                <Button text="⏹" onAction="#stopMedia"/>
+                <Button text="⏩" onAction="#cambiarVelocidadReproduccion" fx:id="btnCambiarVelocidad"/>
+            </HBox>
+        </VBox>
     </bottom>
 </BorderPane>

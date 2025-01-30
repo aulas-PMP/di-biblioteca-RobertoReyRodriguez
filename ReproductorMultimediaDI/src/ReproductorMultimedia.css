@@ -10,39 +10,58 @@
     -fx-font-size: 14px;
 }
 
-/* ToolBar */
-.tool-bar, .control-bar {
+/* Panel de biblioteca */
+#bibliotecaPanel {
     -fx-background-color: #1F1F1F;
-    -fx-spacing: 10;
     -fx-padding: 10;
+    -fx-spacing: 10;
+    -fx-pref-width: 200px; /* Tamaño de la barra lateral */
+    -fx-transition: all 0.3s ease-in-out;
 }
 
-/* Botones */
+/* Botón de ocultar/mostrar biblioteca */
+#btnToggleBiblioteca {
+    -fx-background-color: #3E3E3E;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-padding: 5 10;
+    -fx-cursor: hand;
+    -fx-border-radius: 5px;
+}
+
+#btnToggleBiblioteca:hover {
+    -fx-background-color: #5A5A5A;
+}
+
+/* Botones de reproducción */
 .button {
     -fx-background-color: #3E3E3E;
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 12px;
+    -fx-padding: 5 15;
+    -fx-border-radius: 5px;
 }
 
-/* Biblioteca */
-.library-panel {
+.button:hover {
+    -fx-background-color: #5A5A5A;
+}
+
+/* Controles inferiores */
+.hbox {
     -fx-background-color: #1F1F1F;
     -fx-padding: 10;
+    -fx-alignment: center;
     -fx-spacing: 10;
-}
-
-.library-title {
-    -fx-text-fill: #FFFFFF;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-}
-
-.library-list {
-    -fx-background-color: #2B2B2B;
-    -fx-text-fill: #FFFFFF;
 }
 
 /* MediaView */
 .media-view {
     -fx-background-color: #000000;
+}
+
+/* Visualización de audio */
+#audioVisualizer {
+    -fx-background-color: #000000;
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2px;
 }
